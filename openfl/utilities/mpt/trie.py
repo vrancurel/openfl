@@ -54,13 +54,13 @@ class Trie:
 
             raise Exception("Not found")
 
-    def put(self, key: bytes, value: bytes): # noqa: C901
+    def put(self, key: bytes, value: bytes):  # noqa: C901
         node = self.root
         nibbles = Nibble.from_bytes(key)
 
         while True:
             if is_empty_node(node):
-                leaf = LeafNode.from_nibbles(nibbles, value)
+                leaf = LeafNode(nibbles, value)
                 self.root = leaf
                 return
 
@@ -68,7 +68,7 @@ class Trie:
                 matched = Nibble.prefix_matched_len(node.path, nibbles)
 
                 if matched == len(nibbles) and matched == len(node.path):
-                    new_leaf = LeafNode.from_nibbles(node.path, value)
+                    new_leaf = LeafNode(node.path, value)
                     self.root = new_leaf
                     return
 
@@ -88,12 +88,12 @@ class Trie:
 
                 if matched < len(node.path):
                     branch_nibble, leaf_nibbles = node.path[matched], node.path[matched + 1 :]
-                    new_leaf = LeafNode.from_nibbles(leaf_nibbles, node.value)
+                    new_leaf = LeafNode(leaf_nibbles, node.value)
                     branch.set_branch(branch_nibble, new_leaf)
 
                 if matched < len(nibbles):
                     branch_nibble, leaf_nibbles = nibbles[matched], nibbles[matched + 1 :]
-                    new_leaf = LeafNode.from_nibbles(leaf_nibbles, value)
+                    new_leaf = LeafNode(leaf_nibbles, value)
                     branch.set_branch(branch_nibble, new_leaf)
 
                 return
@@ -129,9 +129,7 @@ class Trie:
                             nibbles[matched],
                             nibbles[matched + 1 :],
                         )
-                        remaining_leaf = LeafNode.from_nibbles(
-                            node_leaf_nibbles, value
-                        )
+                        remaining_leaf = LeafNode(node_leaf_nibbles, value)
                         branch.set_branch(node_branch_nibble, remaining_leaf)
                     elif matched == len(nibbles):
                         branch.set_value(value)
@@ -162,7 +160,9 @@ def dump_node(node: Node, level: int = 0, idx: int = 0):
         return
 
     if isinstance(node, LeafNode):
-        print(f"{level * ' '}{idx} LeafNode Path={Nibble.list_to_str(node.path)} Value={node.value.hex()}")
+        print(
+            f"{level * ' '}{idx} LeafNode Path={Nibble.list_to_str(node.path)} Value={node.value.hex()}"
+        )
         return
 
     if isinstance(node, HashNode):

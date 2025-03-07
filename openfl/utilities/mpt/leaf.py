@@ -10,23 +10,6 @@ class LeafNode(Node):
         self.path = path
         self.value = value
 
-    # nibbles contains one nibble per byte (for test functions)
-    @classmethod
-    def from_nibble_bytes(cls, nibbles: bytes, value: bytes) -> "LeafNode":
-        return cls(Nibble.from_nibble_bytes(nibbles), value)
-
-    @classmethod
-    def from_nibbles(cls, nibbles: List[Nibble], value: bytes) -> "LeafNode":
-        return cls(nibbles, value)
-
-    @classmethod
-    def from_key_value(cls, key: str, value: str) -> "LeafNode":
-        return cls.from_bytes(bytes(key, "utf-8"), bytes(value, "utf-8"))
-
-    @classmethod
-    def from_bytes(cls, key: bytes, value: bytes) -> "LeafNode":
-        return cls.from_nibbles(Nibble.from_bytes(key), value)
-
     def hash(self) -> bytes:
         return keccak256(self.serialize())
 

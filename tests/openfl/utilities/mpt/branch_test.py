@@ -6,7 +6,7 @@ from openfl.utilities.mpt.nibbles import Nibble
 class TestBranch(unittest.TestCase):
     def test_branch(self):
         nibbles, value = bytes([5, 0, 6]), bytes("coin", 'utf-8')
-        leaf = LeafNode.from_nibble_bytes(nibbles, value)
+        leaf = LeafNode(Nibble.from_nibble_bytes(nibbles), value)
 
         b = BranchNode()
         b.set_branch(Nibble(0), leaf)

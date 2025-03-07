@@ -7,7 +7,7 @@ from openfl.utilities.mpt.extension import ExtensionNode
 class TestExtensionNode(unittest.TestCase):
     def test_extension_node(self):
         nibbles, value = bytes([5, 0, 6]), bytes("coin", 'utf-8')
-        leaf = LeafNode.from_nibble_bytes(nibbles, value)
+        leaf = LeafNode(Nibble.from_nibble_bytes(nibbles), value)
 
         b = BranchNode()
         b.set_branch(Nibble(0), leaf)

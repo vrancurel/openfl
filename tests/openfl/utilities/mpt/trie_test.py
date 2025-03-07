@@ -88,7 +88,7 @@ class TestTrie(unittest.TestCase):
         trie = Trie()
         self.assertEqual(EMPTY_NODE_HASH, trie.hash())
         trie.put(bytes([1, 2, 3, 4]), b"hello")
-        ns = LeafNode.from_bytes(bytes([1, 2, 3, 4]), b"hello")
+        ns = LeafNode(Nibble.from_bytes(bytes([1, 2, 3, 4])), b"hello")
         self.assertEqual(ns.hash(), trie.hash())
 
     def test_put_leaf_shorter(self):
@@ -96,14 +96,36 @@ class TestTrie(unittest.TestCase):
         trie.put(bytes([1, 2, 3, 4]), b"hello")
         trie.put(bytes([1, 2, 3]), b"world")
 
-        leaf = LeafNode.from_nibbles([Nibble(4)], b"hello")
+        leaf = LeafNode(Nibble.from_nibble_bytes(bytes([4])), b"hello")
 
         branch = BranchNode()
         branch.set_branch(Nibble(0), leaf)
         branch.set_value(b"world")
 
-        ext = ExtensionNode([Nibble(0), Nibble(1), Nibble(0), Nibble(2), Nibble(0), Nibble(3)], branch)
+        ExtensionNode(Nibble.from_nibble_bytes(bytes([0, 1, 0, 2, 0, 3])), branch)
         #trie.dump()
         #dump_node(ext)
         #self.assertEqual(ext.hash(), trie.hash())
-        
+
+    def test_put_leaf_all_matched(self):
+        trie = Trie()
+        trie.put(bytes([1, 2, 3, 4]), b"hello")
+        trie.put(bytes([1, 2, 3, 4]), b"world")
+
+        ns = LeafNode(Nibble.from_bytes(bytes([1, 2, 3, 4])), b"world")
+        self.assertEqual(ns.hash(), trie.hash())
+
+    def test_put_leaf_more(self):
+        trie = Trie()
+        trie.put(bytes([1, 2, 3, 4]), b"hello")
+        trie.put(bytes([1, 2, 3, 4, 5, 6]), b"world")
+
+        leaf = LeafNode(Nibble.from_nibble_bytes(bytes([5, 0, 6])), b"world")
+
+        branch = BranchNode()
+        branch.set_value(b"hello")
+        branch.set_branch(Nibble(0), leaf)
+
+        ext = ExtensionNode(Nibble.from_nibble_bytes(bytes([0, 1, 0, 2, 0, 3, 0, 4])), branch)
+
+        self.assertEqual(ext.hash(), trie.hash())

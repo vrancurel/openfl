@@ -14,12 +14,12 @@ class TestLeaf(unittest.TestCase):
 
     def test_leaf_node(self):
         nibbles, value = bytes([1, 2, 3, 4]), bytes("verb", 'utf-8')
-        l = LeafNode.from_bytes(nibbles, value)
+        l = LeafNode(Nibble.from_bytes(nibbles), value)
         self.assertEqual("2bafd1eef58e8707569b7c70eb2f91683136910606ba7e31d07572b8b67bf5c6", l.hash().hex())
 
     def test_leaf_node2(self):
         nibbles, value = bytes([5, 0, 6]), bytes("coin", 'utf-8')
-        l = LeafNode.from_nibble_bytes(nibbles, value)
+        l = LeafNode(Nibble.from_nibble_bytes(nibbles), value)
         self.assertEqual("c37ec985b7a88c2c62beb268750efe657c36a585beb435eb9f43b839846682ce", l.hash().hex())
 
 if __name__ == '__main__':

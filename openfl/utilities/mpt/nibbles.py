@@ -12,7 +12,7 @@ class Nibble:
 
     def to_byte(self) -> int:
         return self._value
-    
+
     @staticmethod
     def list_to_str(nibble_list: List["Nibble"]) -> str:
         return "".join(str(nibble) for nibble in nibble_list)
