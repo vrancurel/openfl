@@ -4,6 +4,7 @@ from openfl.utilities.mpt.leaf import LeafNode
 from openfl.utilities.mpt.nodes import EMPTY_NODE_HASH
 from openfl.utilities.mpt.trie import Trie, dump_node
 from openfl.utilities.mpt.nibbles import Nibble
+import sys
 import unittest
 
 class TestTrie(unittest.TestCase):
@@ -102,10 +103,8 @@ class TestTrie(unittest.TestCase):
         branch.set_branch(Nibble(0), leaf)
         branch.set_value(b"world")
 
-        ExtensionNode(Nibble.from_nibble_bytes(bytes([0, 1, 0, 2, 0, 3])), branch)
-        #trie.dump()
-        #dump_node(ext)
-        #self.assertEqual(ext.hash(), trie.hash())
+        ext = ExtensionNode(Nibble.from_nibble_bytes(bytes([0, 1, 0, 2, 0, 3])), branch)
+        self.assertEqual(ext.hash(), trie.hash())
 
     def test_put_leaf_all_matched(self):
         trie = Trie()
@@ -129,3 +128,15 @@ class TestTrie(unittest.TestCase):
         ext = ExtensionNode(Nibble.from_nibble_bytes(bytes([0, 1, 0, 2, 0, 3, 0, 4])), branch)
 
         self.assertEqual(ext.hash(), trie.hash())
+
+    def test_put_order(self):
+        trie1 = Trie()
+        trie2 = Trie()
+
+        trie1.put(bytes([1, 2, 3, 4, 5, 6]), b"world")
+        trie1.put(bytes([1, 2, 3, 4]), b"hello")
+
+        trie2.put(bytes([1, 2, 3, 4]), b"hello")
+        trie2.put(bytes([1, 2, 3, 4, 5, 6]), b"world")
+
+        self.assertEqual(trie1.hash(), trie2.hash())

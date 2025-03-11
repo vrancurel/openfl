@@ -6,6 +6,7 @@ from openfl.utilities.mpt.hash import HashNode
 from openfl.utilities.mpt.leaf import LeafNode
 from openfl.utilities.mpt.nibbles import Nibble
 from openfl.utilities.mpt.nodes import EMPTY_NODE_HASH, Node, is_empty_node
+from openfl.utilities.mpt.pointer import PointerFactory
 
 
 class Trie:
@@ -55,13 +56,17 @@ class Trie:
             raise Exception("Not found")
 
     def put(self, key: bytes, value: bytes):  # noqa: C901
-        node = self.root
+        pf = PointerFactory()
+        nodep = pf.new(self.root)
         nibbles = Nibble.from_bytes(key)
 
         while True:
+            node = pf.get_value_at(nodep)
+            
             if is_empty_node(node):
                 leaf = LeafNode(nibbles, value)
-                self.root = leaf
+                pf.assign(nodep, leaf)
+                self.root = pf.get_value_at(1)
                 return
 
             if isinstance(node, LeafNode):
@@ -69,7 +74,8 @@ class Trie:
 
                 if matched == len(nibbles) and matched == len(node.path):
                     new_leaf = LeafNode(node.path, value)
-                    self.root = new_leaf
+                    pf.assign(nodep, new_leaf)
+                    self.root = pf.get_value_at(1)
                     return
 
                 branch = BranchNode()
@@ -82,9 +88,9 @@ class Trie:
 
                 if matched > 0:
                     ext = ExtensionNode(node.path[:matched], branch)
-                    self.root = node = ext
+                    pf.assign(nodep, ext)
                 else:
-                    self.root = node = branch
+                    pf.assign(nodep, branch)
 
                 if matched < len(node.path):
                     branch_nibble, leaf_nibbles = node.path[matched], node.path[matched + 1 :]
@@ -96,16 +102,18 @@ class Trie:
                     new_leaf = LeafNode(leaf_nibbles, value)
                     branch.set_branch(branch_nibble, new_leaf)
 
+                self.root = pf.get_value_at(1)
                 return
 
             if isinstance(node, BranchNode):
                 if len(nibbles) == 0:
                     node.set_value(value)
+                    self.root = pf.get_value_at(1)
                     return
 
                 b, remaining = nibbles[0], nibbles[1:]
                 nibbles = remaining
-                node = node.branches[b.to_byte()]
+                nodep = pf.new(node.branches[b.to_byte()])
                 continue
 
             if isinstance(node, ExtensionNode):
@@ -137,19 +145,19 @@ class Trie:
                         raise Exception(f"Too many matched ({matched} > {len(nibbles)})")
 
                     if len(ext_nibbles) == 0:
-                        self.root = branch
+                        pf.assign(nodep, branch)
                     else:
-                        self.root = ExtensionNode(ext_nibbles, branch)
+                        pf.assign(nodep, ExtensionNode(ext_nibbles, branch))
+                    self.root = pf.get_value_at(1)
                     return
 
                 nibbles = nibbles[matched:]
-                node = node.next_
+                nodep = pf.new(node.next_)
                 continue
 
             raise Exception("Unknown type")
 
     def dump(self):
-        print("Dump")
         node = self.root
         dump_node(node, 0, 0)
 
@@ -172,7 +180,7 @@ def dump_node(node: Node, level: int = 0, idx: int = 0):
     if isinstance(node, BranchNode):
         print(f"{level * ' '}{idx} BranchNode Value={node.value.hex()}")
         for i in range(16):
-            dump_node(node.branches[0], level + 2, i)
+            dump_node(node.branches[i], level + 2, i)
         return
 
     if isinstance(node, ExtensionNode):
