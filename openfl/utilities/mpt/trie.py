@@ -62,7 +62,7 @@ class Trie:
 
         while True:
             node = pf.get_value_at(nodep)
-            
+
             if is_empty_node(node):
                 leaf = LeafNode(nibbles, value)
                 pf.assign(nodep, leaf)
@@ -169,7 +169,7 @@ def dump_node(node: Node, level: int = 0, idx: int = 0):
 
     if isinstance(node, LeafNode):
         print(
-            f"{level * ' '}{idx} LeafNode Path={Nibble.list_to_str(node.path)} Value={node.value.hex()}"
+            f"{level * ' '}{idx} LeafNode Path={Nibble.list_to_str(node.path)} Value={node.value.hex()}" # noqa: E501
         )
         return
 

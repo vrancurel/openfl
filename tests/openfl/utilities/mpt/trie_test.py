@@ -4,7 +4,7 @@ from openfl.utilities.mpt.leaf import LeafNode
 from openfl.utilities.mpt.nodes import EMPTY_NODE_HASH
 from openfl.utilities.mpt.trie import Trie, dump_node
 from openfl.utilities.mpt.nibbles import Nibble
-import sys
+pass
 import unittest
 
 class TestTrie(unittest.TestCase):
