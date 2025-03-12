@@ -97,13 +97,13 @@ class TestTrie(unittest.TestCase):
         trie.put(bytes([1, 2, 3, 4]), b"hello")
         trie.put(bytes([1, 2, 3]), b"world")
 
-        leaf = LeafNode(Nibble.from_nibble_bytes(bytes([4])), b"hello")
+        leaf = LeafNode(Nibble.from_nibble_bytes([4]), b"hello")
 
         branch = BranchNode()
         branch.set_branch(Nibble(0), leaf)
         branch.set_value(b"world")
 
-        ext = ExtensionNode(Nibble.from_nibble_bytes(bytes([0, 1, 0, 2, 0, 3])), branch)
+        ext = ExtensionNode(Nibble.from_nibble_bytes([0, 1, 0, 2, 0, 3]), branch)
         self.assertEqual(ext.hash(), trie.hash())
 
     def test_put_leaf_all_matched(self):
@@ -119,13 +119,13 @@ class TestTrie(unittest.TestCase):
         trie.put(bytes([1, 2, 3, 4]), b"hello")
         trie.put(bytes([1, 2, 3, 4, 5, 6]), b"world")
 
-        leaf = LeafNode(Nibble.from_nibble_bytes(bytes([5, 0, 6])), b"world")
+        leaf = LeafNode(Nibble.from_nibble_bytes([5, 0, 6]), b"world")
 
         branch = BranchNode()
         branch.set_value(b"hello")
         branch.set_branch(Nibble(0), leaf)
 
-        ext = ExtensionNode(Nibble.from_nibble_bytes(bytes([0, 1, 0, 2, 0, 3, 0, 4])), branch)
+        ext = ExtensionNode(Nibble.from_nibble_bytes([0, 1, 0, 2, 0, 3, 0, 4]), branch)
 
         self.assertEqual(ext.hash(), trie.hash())
 
@@ -140,3 +140,73 @@ class TestTrie(unittest.TestCase):
         trie2.put(bytes([1, 2, 3, 4, 5, 6]), b"world")
 
         self.assertEqual(trie1.hash(), trie2.hash())
+
+    def test_put_extension_shorter_all_matched(self):
+        trie = Trie()
+        trie.put(bytes([1, 2, 3, 4]), b"hello1")
+        trie.put(bytes([1, 2, 3, 5]), b"hello2")
+        trie.put(bytes([1, 2, 3]), b"world")
+
+        leaf1 = LeafNode([], b"hello1")
+        leaf2 = LeafNode([], b"hello2")
+        
+        branch1 = BranchNode()
+        branch1.set_branch(Nibble(4), leaf1)
+        branch1.set_branch(Nibble(5), leaf2)
+        
+        branch2 = BranchNode()
+        branch2.set_value(b"world")
+        branch2.set_branch(Nibble(0), branch1)
+        
+        ext = ExtensionNode(Nibble.from_nibble_bytes([0, 1, 0, 2, 0, 3]), branch2)
+
+        self.assertEqual(ext.hash(), trie.hash())
+
+    def test_put_extension_shorter_partial_matched(self):
+        trie = Trie()
+        trie.put(bytes([1, 2, 3, 4]), b"hello1")
+        trie.put(bytes([1, 2, 3, 5]), b"hello2")
+        trie.put(bytes([1, 2, 5]), b"world")
+        
+        leaf1 = LeafNode([], b"hello1")
+        leaf2 = LeafNode([], b"hello2")
+        
+        branch1 = BranchNode()
+        branch1.set_branch(Nibble(4), leaf1)
+        branch1.set_branch(Nibble(5), leaf2)
+        
+        ext1 = ExtensionNode([Nibble(0)], branch1)
+        
+        branch2 = BranchNode()
+        branch2.set_branch(Nibble(3), ext1)
+        
+        leaf3 = LeafNode([], b"world")
+        branch2.set_branch(Nibble(5), leaf3)
+        
+        ext2 = ExtensionNode(Nibble.from_nibble_bytes([0, 1, 0, 2, 0]), branch2)
+        
+        self.assertEqual(ext2.hash(), trie.hash())
+
+    def test_put_extension_shorter_zero_matched(self):
+        trie = Trie()
+        trie.put(bytes([1, 2, 3, 4]), b"hello1")
+        trie.put(bytes([1, 2, 3, 5]), b"hello2")
+        trie.put(bytes([1 << 4, 2, 5]), b"world")
+        
+        leaf1 = LeafNode([], b"hello1")
+        leaf2 = LeafNode([], b"hello2")
+        
+        branch1 = BranchNode()
+        branch1.set_branch(Nibble(4), leaf1)
+        branch1.set_branch(Nibble(5), leaf2)
+        
+        ext1 = ExtensionNode(Nibble.from_nibble_bytes([1, 0, 2, 0, 3, 0]), branch1)
+        
+        branch2 = BranchNode()
+        branch2.set_branch(Nibble(0), ext1)
+        
+        leaf3 = LeafNode(Nibble.from_nibble_bytes([0, 0, 2, 0, 5]), b"world")
+        branch2.set_branch(Nibble(1), leaf3)
+        
+        self.assertEqual(branch2.hash(), trie.hash())
+

@@ -6,7 +6,7 @@ from openfl.utilities.mpt.nodes import EMPTY_NODE_RAW, Node, serialize
 class BranchNode(Node):
     def __init__(self):
         self.branches = [None] * 16
-        self.value = None
+        self.value = bytes()
 
     def hash(self):
         return keccak256(self.serialize())

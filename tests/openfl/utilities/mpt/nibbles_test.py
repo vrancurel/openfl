@@ -10,7 +10,7 @@ class TestNibble(unittest.TestCase):
     def test_to_prefixed(self):
         cases = [
             {'ns': [Nibble(1)], 'isLeafNode': False, 'expected': [Nibble(1), Nibble(1)]},
-            {'ns': [Nibble(1), Nibble(2)], 'isLeafNode': False, 'expected': [Nibble(0), Nibble(0), Nibble(1), Nibble(2)]},
+            {'ns': Nibble.from_nibble_bytes([1, 2]), 'isLeafNode': False, 'expected': [Nibble(0), Nibble(0), Nibble(1), Nibble(2)]},
             {'ns': [Nibble(1)], 'isLeafNode': True, 'expected': [Nibble(3), Nibble(1)]},
             {'ns': [Nibble(1), Nibble(2)], 'isLeafNode': True, 'expected': [Nibble(2), Nibble(0), Nibble(1), Nibble(2)]},
             {'ns': [Nibble(5), Nibble(0), Nibble(6)], 'isLeafNode': True, 'expected': [Nibble(3), Nibble(5), Nibble(0), Nibble(6)]},
