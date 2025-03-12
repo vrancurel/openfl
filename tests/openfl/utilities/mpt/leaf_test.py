@@ -17,7 +17,7 @@ class TestLeaf(unittest.TestCase):
         self.assertEqual("2bafd1eef58e8707569b7c70eb2f91683136910606ba7e31d07572b8b67bf5c6", l.hash().hex())
 
     def test_leaf_node2(self):
-        l = LeafNode(Nibble.from_nibble_bytes([5, 0, 6]), bytes("coin", 'utf-8'))
+        l = LeafNode(Nibble.from_list_int([5, 0, 6]), bytes("coin", 'utf-8'))
         self.assertEqual("c37ec985b7a88c2c62beb268750efe657c36a585beb435eb9f43b839846682ce", l.hash().hex())
 
 if __name__ == '__main__':

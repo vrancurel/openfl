@@ -21,17 +21,15 @@ class Nibble:
     def is_nibble(nibble_byte: int):
         return 0 <= int(nibble_byte) < 16
 
-    # byte_ contains one nibble per byte (for test functions)
     @classmethod
-    def from_nibble_byte(cls, byte_: int) -> "Nibble":
-        if not cls.is_nibble(byte_):
-            raise ValueError(f"Non-nibble byte: {byte_}")
-        return cls(byte_)
+    def from_int(cls, i: int) -> "Nibble":
+        if not cls.is_nibble(i):
+            raise ValueError(f"Non-nibble byte: {i}")
+        return cls(i)
 
-    # bytes_ contain one nibble per byte (for test functions)
     @classmethod
-    def from_nibble_bytes(cls, bytes_: List[int]) -> List["Nibble"]:
-        return [cls.from_nibble_byte(b) for b in bytes_]
+    def from_list_int(cls, l_: List[int]) -> List["Nibble"]:
+        return [cls.from_int(i) for i in l_]
 
     @classmethod
     def from_byte(cls, byte_value: int) -> "Nibble":
