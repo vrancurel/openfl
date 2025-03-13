@@ -2,12 +2,15 @@ import unittest
 from openfl.utilities.mpt.branch import BranchNode
 from openfl.utilities.mpt.leaf import LeafNode
 from openfl.utilities.mpt.nibbles import Nibble
+from openfl.utilities.mpt.pointer import PointerFactory
 
 class TestBranch(unittest.TestCase):
     def test_branch(self):
+        pf = PointerFactory()
+        
         leaf = LeafNode(Nibble.from_list_int([5, 0, 6]), bytes("coin", 'utf-8'))
 
-        b = BranchNode()
+        b = BranchNode(pf)
         b.set_branch(Nibble(0), leaf)
         b.set_value(bytes("verb", 'utf-8'))  # set the value for verb
 

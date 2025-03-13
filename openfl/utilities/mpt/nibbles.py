@@ -10,7 +10,7 @@ class Nibble:
     def __str__(self):
         return str(self._value)
 
-    def to_byte(self) -> int:
+    def to_int(self) -> int:
         return self._value
 
     @staticmethod
