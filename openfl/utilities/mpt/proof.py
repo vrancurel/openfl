@@ -1,0 +1,89 @@
+import abc
+import collections
+from openfl.utilities.mpt.nibbles import Nibble
+from openfl.utilities.mpt.value import ValueNode
+from openfl.utilities.mpt.extension import ExtensionNode
+from openfl.utilities.mpt.nodes import Node, serialize
+from openfl.utilities.mpt.serde import deserialize
+from openfl.utilities.mpt.pointer import PointerFactory
+from typing import List
+
+class Proof(abc.ABC):
+    @abc.abstractmethod
+    def put(self, key: bytes, value: bytes) -> None:
+        pass
+
+    @abc.abstractmethod
+    def delete(self, key: bytes) -> None:
+        pass
+
+    @abc.abstractmethod
+    def has(self, key: bytes) -> bool:
+        pass
+
+    @abc.abstractmethod
+    def get(self, key: bytes) -> bytes:
+        pass
+
+    @abc.abstractmethod
+    def serialize(self) -> list[bytes]:
+        pass
+
+    @abc.abstractmethod
+    def dump(self) -> None:
+        pass
+
+
+def verify_proof(root_hash: bytes, key: bytes, proof: Proof):
+    pf = PointerFactory()
+    
+    path = Nibble.from_bytes(key)
+    want_hash = root_hash
+
+    i = 0
+    while True:
+        buf = proof.get(want_hash)
+        if buf is None:
+            raise Exception(f"proof node {i} (hash {want_hash.hex()}) missing")
+        try:
+            n = deserialize(pf, buf)
+        except Exception as err:
+            raise Exception(f"bad proof node {i}: {err}")
+
+        path, child = get_child(pf, n, path)
+        
+        if child is None:
+            return None
+        elif isinstance(child, HashNode):
+            path = path
+            want_hash = child.hash_value
+        elif isinstance(child, LeafNode):
+            return child.value
+        elif isinstance(child, ValueNode):
+            return child.value
+        i += 1
+
+def get_child(pf: PointerFactory, node: Node, path: List[Nibble]):  
+    while True:
+        if isinstance(node, ExtensionNode):
+            if Nibble.prefix_matched_len(path, node.path) != len(node.path):
+                return None, None
+
+            node = node.next
+            path = path[len(node.path):]
+
+        elif isinstance(node, BranchNode):
+            if len(path) == 0:
+                return Node, ValueNode(node.value)
+
+            node = node.branches[path[0]]
+            path = path[1:]
+
+        elif isinstance(node, HashNode):
+            return path, node
+        elif node is None:
+            return path, None
+        elif isinstance(node, LeafNode):
+            return None, node
+        else:
+            raise Exception(f"{type(node)}: invalid node: {node}")

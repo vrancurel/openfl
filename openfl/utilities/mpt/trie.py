@@ -5,8 +5,9 @@ from openfl.utilities.mpt.extension import ExtensionNode
 from openfl.utilities.mpt.hash import HashNode
 from openfl.utilities.mpt.leaf import LeafNode
 from openfl.utilities.mpt.nibbles import Nibble
-from openfl.utilities.mpt.nodes import EMPTY_NODE_HASH, Node, is_empty_node
+from openfl.utilities.mpt.nodes import EMPTY_NODE_HASH, Node, is_empty_node, hash, serialize
 from openfl.utilities.mpt.pointer import Pointer, PointerFactory
+from openfl.utilities.mpt.proof import Proof
 
 
 class Trie:
@@ -156,6 +157,45 @@ class Trie:
                 continue
 
             raise Exception("Unknown type")
+
+    def prove(self, key: bytes, proof: Proof) -> bool:
+        nodep = self.rootp
+        nibbles = Nibble.from_bytes(key)
+
+        while True:
+            node = nodep.get_pointed_value()
+            proof.put(hash(node), serialize(node))
+
+            if is_empty_node(node):
+                return False
+
+            if isinstance(node, LeafNode):
+                matched = Nibble.prefix_matched_len(node.path, nibbles)
+                if matched != len(node.path) or matched != len(nibbles):
+                    return False
+
+                return True
+
+            if isinstance(node, BranchNode):
+                if len(nibbles) == 0:
+                    return node.has_value()
+
+                b, remaining = nibbles[0], nibbles[1:]
+                nibbles = remaining
+                nodep = branch.branches[b]
+                continue
+
+            if isinstance(node, ExtensionNode):
+                matched = Nibble.prefix_matched_len(node.path, nibbles)
+
+                if matched < len(node.path):
+                    return False
+                    
+                nibbles = nibbles[matched:]
+                nodep = node.next_
+                continue
+
+            raise Exception("Not Found")
 
     def dump(self):
         root = self.rootp.get_pointed_value()
