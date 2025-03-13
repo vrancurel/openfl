@@ -8,9 +8,9 @@ from openfl.utilities.mpt.pointer import Pointer, PointerFactory
 
 class BranchNode(Node):
     def __init__(self, pf: PointerFactory):
-        self.pf = pf
+        self.pf: PointerFactory = pf
         self.branches: List[Pointer] = [self.pf.create_pointer(None) for _ in range(16)]
-        self.value = bytes()
+        self.value: bytes = bytes()
 
     def hash(self):
         return keccak256(self.serialize())

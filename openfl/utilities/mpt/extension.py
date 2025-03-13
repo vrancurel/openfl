@@ -10,8 +10,8 @@ from openfl.utilities.mpt.pointer import Pointer, PointerFactory
 
 class ExtensionNode(Node):
     def __init__(self, pf: PointerFactory, nibbles: List[Nibble], next_: Node):
-        self.pf = pf
-        self.path = nibbles
+        self.pf: PointerFactory = pf
+        self.path: List[Nibble] = nibbles
         self.next_: Pointer = self.pf.create_pointer(next_)
 
     def hash(self) -> bytes:

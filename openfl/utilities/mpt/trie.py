@@ -6,13 +6,13 @@ from openfl.utilities.mpt.hash import HashNode
 from openfl.utilities.mpt.leaf import LeafNode
 from openfl.utilities.mpt.nibbles import Nibble
 from openfl.utilities.mpt.nodes import EMPTY_NODE_HASH, Node, is_empty_node
-from openfl.utilities.mpt.pointer import PointerFactory
+from openfl.utilities.mpt.pointer import Pointer, PointerFactory
 
 
 class Trie:
     def __init__(self):
-        self.pf = PointerFactory()
-        self.rootp = self.pf.create_pointer(None)
+        self.pf: PointerFactory = PointerFactory()
+        self.rootp: Pointer = self.pf.create_pointer(None)
 
     def hash(self) -> bytes:
         root = self.rootp.get_pointed_value()

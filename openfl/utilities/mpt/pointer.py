@@ -4,8 +4,8 @@ from typing import Any
 
 class Pointer:
     def __init__(self, pf: "PointerFactory", address: int):
-        self._pf = pf
-        self._address = address
+        self._pf: "PointerFactory" = pf
+        self._address: int = address
 
     def get_address(self) -> int:
         return self._address
@@ -24,9 +24,9 @@ class PointerFactory:
     Null = None
 
     def __init__(self):
-        self.pointer_storage = deque()
-        self.pointer_address = 0
-        self.Null = self.create_pointer()
+        self.pointer_storage: deque = deque()
+        self.pointer_address: int = 0
+        self.Null: Pointer = self.create_pointer()
 
     def create_pointer(self, value: Any = None) -> Pointer:
         self.pointer_storage.append(value)

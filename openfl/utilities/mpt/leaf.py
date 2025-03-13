@@ -7,8 +7,8 @@ from openfl.utilities.mpt.nodes import Node, serialize
 
 class LeafNode(Node):
     def __init__(self, path: List[Nibble], value: bytes):
-        self.path = path
-        self.value = value
+        self.path: List[Nibble] = path
+        self.value: bytes = value
 
     def hash(self) -> bytes:
         return keccak256(self.serialize())

@@ -6,7 +6,7 @@ from openfl.utilities.mpt.nodes import Node, serialize
 
 class HashNode(Node):
     def __init__(self, hash_value: bytes):
-        self.hash_value = hash_value
+        self.hash_value: bytes = hash_value
 
     @staticmethod
     def new_hash_node(hash_value: bytes) -> "HashNode":

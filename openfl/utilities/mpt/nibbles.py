@@ -5,7 +5,7 @@ class Nibble:
     def __init__(self, nibble_byte: int):
         if not self.is_nibble(nibble_byte):
             raise ValueError("Non-nibble byte: %d" % nibble_byte)
-        self._value = nibble_byte
+        self._value: int = nibble_byte
 
     def __str__(self):
         return str(self._value)
