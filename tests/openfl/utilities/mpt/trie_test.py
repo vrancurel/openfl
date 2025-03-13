@@ -95,7 +95,7 @@ class TestTrie(unittest.TestCase):
 
     def test_put_leaf_shorter(self):
         pf = PointerFactory()
-        
+
         trie = Trie()
         trie.put(bytes([1, 2, 3, 4]), b"hello")
         trie.put(bytes([1, 2, 3]), b"world")
@@ -119,7 +119,7 @@ class TestTrie(unittest.TestCase):
 
     def test_put_leaf_more(self):
         pf = PointerFactory()
-        
+
         trie = Trie()
         trie.put(bytes([1, 2, 3, 4]), b"hello")
         trie.put(bytes([1, 2, 3, 4, 5, 6]), b"world")
@@ -148,7 +148,7 @@ class TestTrie(unittest.TestCase):
 
     def test_put_extension_shorter_all_matched(self):
         pf = PointerFactory()
-        
+
         trie = Trie()
         trie.put(bytes([1, 2, 3, 4]), b"hello1")
         trie.put(bytes([1, 2, 3, 5]), b"hello2")
@@ -165,13 +165,13 @@ class TestTrie(unittest.TestCase):
         branch2.set_value(b"world")
         branch2.set_branch(Nibble(0), branch1)
 
-        ext = ExtensionNode(pf, Nibble.from_list_int([0, 1, 0, 2, 0, 3]), branch2)
+        ExtensionNode(pf, Nibble.from_list_int([0, 1, 0, 2, 0, 3]), branch2)
 
         #self.assertEqual(ext.hash(), trie.hash())
 
     def test_put_extension_shorter_partial_matched(self):
         pf = PointerFactory()
-        
+
         trie = Trie()
         trie.put(bytes([1, 2, 3, 4]), b"hello1")
         trie.put(bytes([1, 2, 3, 5]), b"hello2")
@@ -198,7 +198,7 @@ class TestTrie(unittest.TestCase):
 
     def test_put_extension_shorter_zero_matched(self):
         pf = PointerFactory()
-        
+
         trie = Trie()
         trie.put(bytes([1, 2, 3, 4]), b"hello1")
         trie.put(bytes([1, 2, 3, 5]), b"hello2")
@@ -223,41 +223,41 @@ class TestTrie(unittest.TestCase):
 
     def test_put_extension_all_matched(self):
         pf = PointerFactory()
-        
+
         trie = Trie()
         trie.put(bytes([1, 2, 3, 4]), b"hello1")
         trie.put(bytes([1, 2, 3, 5 << 4]), b"hello2")
         trie.put(bytes([1, 2, 3]), b"world")
-        
+
         leaf1 = LeafNode([Nibble(4)], b"hello1")
-        leaf2 = LeafNode([Nibble(0)], b"hello2") 
+        leaf2 = LeafNode([Nibble(0)], b"hello2")
 
         branch = BranchNode(pf)
         branch.set_branch(Nibble(0), leaf1)
         branch.set_branch(Nibble(5), leaf2)
         branch.set_value(b"world")
-        
+
         ext = ExtensionNode(pf, Nibble.from_list_int([0, 1, 0, 2, 0, 3]), branch)
-        
+
         self.assertEqual(ext.hash(), trie.hash())
 
     def test_put_extension_more(self):
         pf = PointerFactory()
-        
+
         trie = Trie()
         trie.put(bytes([1, 2, 3, 4]), b"hello1")
         trie.put(bytes([1, 2, 3, 5]), b"hello2")
         trie.put(bytes([1, 2, 3, 6]), b"world")
 
         leaf1 = LeafNode([], b"hello1")
-        leaf2 = LeafNode([], b"hello2") 
-        leaf3 = LeafNode([], b"world") 
+        leaf2 = LeafNode([], b"hello2")
+        leaf3 = LeafNode([], b"world")
 
         branch = BranchNode(pf)
         branch.set_branch(Nibble(4), leaf1)
         branch.set_branch(Nibble(5), leaf2)
         branch.set_branch(Nibble(6), leaf3)
-        
+
         ext = ExtensionNode(pf, Nibble.from_list_int([0, 1, 0, 2, 0, 3, 0]), branch)
 
         self.assertEqual(ext.hash(), trie.hash())

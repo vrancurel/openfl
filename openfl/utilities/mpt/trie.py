@@ -26,7 +26,7 @@ class Trie:
 
         while True:
             node = nodep.get_pointed_value()
-            
+
             if is_empty_node(node):
                 return None, False
 
@@ -62,7 +62,7 @@ class Trie:
     def put(self, key: bytes, value: bytes):  # noqa: C901
         nodep = self.rootp
         nibbles = Nibble.from_bytes(key)
-        
+
         while True:
             node = nodep.get_pointed_value()
 
@@ -127,7 +127,9 @@ class Trie:
                     if len(ext_remaining_nibbles) == 0:
                         branch.set_branch(branch_nibble, node.next_.get_pointed_value())
                     else:
-                        ext = ExtensionNode(self.pf, ext_remaining_nibbles, node.next_.get_pointed_value())
+                        ext = ExtensionNode(
+                            self.pf, ext_remaining_nibbles, node.next_.get_pointed_value()
+                        )
                         branch.set_branch(branch_nibble, ext)
 
                     if matched < len(nibbles):
@@ -167,7 +169,7 @@ def dump_node(node: Node, level: int = 0, idx: int = 0):
 
     if isinstance(node, LeafNode):
         print(
-            f"{level * ' '}{idx} LeafNode Path={Nibble.list_to_str(node.path)} Value={node.value.hex()}" # noqa: E501
+            f"{level * ' '}{idx} LeafNode Path={Nibble.list_to_str(node.path)} Value={node.value.hex()}"  # noqa: E501
         )
         return
 

@@ -1,13 +1,15 @@
+from typing import List
+
 from openfl.utilities.mpt.crypto import keccak256
 from openfl.utilities.mpt.nibbles import Nibble
 from openfl.utilities.mpt.nodes import EMPTY_NODE_RAW, Node, serialize
-from openfl.utilities.mpt.pointer import PointerFactory
+from openfl.utilities.mpt.pointer import Pointer, PointerFactory
 
 
 class BranchNode(Node):
     def __init__(self, pf: PointerFactory):
         self.pf = pf
-        self.branches = [self.pf.create_pointer(None) for _ in range(16)]
+        self.branches: List[Pointer] = [self.pf.create_pointer(None) for _ in range(16)]
         self.value = bytes()
 
     def hash(self):

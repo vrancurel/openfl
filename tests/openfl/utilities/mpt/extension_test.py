@@ -8,7 +8,7 @@ from openfl.utilities.mpt.pointer import PointerFactory
 class TestExtensionNode(unittest.TestCase):
     def test_extension_node(self):
         pf = PointerFactory()
-        
+
         leaf = LeafNode(Nibble.from_list_int([5, 0, 6]), bytes("coin", 'utf-8'))
 
         b = BranchNode(pf)

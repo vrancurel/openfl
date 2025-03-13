@@ -5,7 +5,7 @@ from rlp import encode
 from openfl.utilities.mpt.crypto import keccak256
 from openfl.utilities.mpt.nibbles import Nibble
 from openfl.utilities.mpt.nodes import Node, serialize
-from openfl.utilities.mpt.pointer import PointerFactory
+from openfl.utilities.mpt.pointer import Pointer, PointerFactory
 
 
 class ExtensionNode(Node):

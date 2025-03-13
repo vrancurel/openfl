@@ -18,10 +18,11 @@ class Pointer:
 
     def set_pointed_value(self, value: Any):
         self._pf.pointer_storage[self.get_address()] = value
-        
+
+
 class PointerFactory:
     Null = None
-    
+
     def __init__(self):
         self.pointer_storage = deque()
         self.pointer_address = 0

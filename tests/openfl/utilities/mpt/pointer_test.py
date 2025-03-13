@@ -8,7 +8,7 @@ class TestPointer(unittest.TestCase):
         self.assertEqual(0, pf.Null.get_address())
         with self.assertRaises(Exception):
             pf.get_pointed_value(pf.Null)
-        
+
     def test_simple(self):
         pf = PointerFactory()
         p1 = pf.create_pointer(42)
