@@ -22,9 +22,9 @@ class TestProof(unittest.TestCase):
         ok = trie.prove(bytes([1, 2, 3]), proof)
         proof.dump()
         self.assertTrue(ok)
-        
+
         root_hash = trie.hash()
-        
+
         try:
             val = verify_proof(root_hash, bytes([1, 2, 3]), proof)
         except Exception as e:

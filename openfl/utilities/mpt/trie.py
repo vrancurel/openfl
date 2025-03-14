@@ -5,7 +5,7 @@ from openfl.utilities.mpt.extension import ExtensionNode
 from openfl.utilities.mpt.hash import HashNode
 from openfl.utilities.mpt.leaf import LeafNode
 from openfl.utilities.mpt.nibbles import Nibble
-from openfl.utilities.mpt.nodes import EMPTY_NODE_HASH, Node, is_empty_node, hash, serialize
+from openfl.utilities.mpt.nodes import EMPTY_NODE_HASH, Node, hash, is_empty_node, serialize
 from openfl.utilities.mpt.pointer import Pointer, PointerFactory
 from openfl.utilities.mpt.proof import Proof
 
@@ -182,7 +182,7 @@ class Trie:
 
                 b, remaining = nibbles[0], nibbles[1:]
                 nibbles = remaining
-                nodep = branch.branches[b]
+                nodep = node.branches[b]
                 continue
 
             if isinstance(node, ExtensionNode):
@@ -190,7 +190,7 @@ class Trie:
 
                 if matched < len(node.path):
                     return False
-                    
+
                 nibbles = nibbles[matched:]
                 nodep = node.next_
                 continue

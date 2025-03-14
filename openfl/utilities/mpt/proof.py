@@ -1,15 +1,16 @@
 import abc
-import collections
-from openfl.utilities.mpt.nibbles import Nibble
-from openfl.utilities.mpt.value import ValueNode
-from openfl.utilities.mpt.extension import ExtensionNode
+from typing import List
+
 from openfl.utilities.mpt.branch import BranchNode
+from openfl.utilities.mpt.deser import deserialize
+from openfl.utilities.mpt.extension import ExtensionNode
 from openfl.utilities.mpt.hash import HashNode
 from openfl.utilities.mpt.leaf import LeafNode
-from openfl.utilities.mpt.nodes import Node, serialize
-from openfl.utilities.mpt.deser import deserialize
+from openfl.utilities.mpt.nibbles import Nibble
+from openfl.utilities.mpt.nodes import Node
 from openfl.utilities.mpt.pointer import PointerFactory
-from typing import List
+from openfl.utilities.mpt.value import ValueNode
+
 
 class Proof(abc.ABC):
     @abc.abstractmethod
@@ -39,7 +40,7 @@ class Proof(abc.ABC):
 
 def verify_proof(root_hash: bytes, key: bytes, proof: Proof):
     pf = PointerFactory()
-    
+
     path = Nibble.from_bytes(key)
     want_hash = root_hash
 
@@ -54,7 +55,7 @@ def verify_proof(root_hash: bytes, key: bytes, proof: Proof):
             raise Exception(f"bad proof node {i}: {err}")
 
         path, child = get_child(pf, n, path)
-        
+
         if child is None:
             return None
         elif isinstance(child, HashNode):
@@ -66,13 +67,14 @@ def verify_proof(root_hash: bytes, key: bytes, proof: Proof):
             return child.value
         i += 1
 
-def get_child(pf: PointerFactory, node: Node, path: List[Nibble]):  
+
+def get_child(pf: PointerFactory, node: Node, path: List[Nibble]):
     while True:
         if isinstance(node, ExtensionNode):
             if Nibble.prefix_matched_len(path, node.path) != len(node.path):
                 return None, None
 
-            path = path[len(node.path):]
+            path = path[len(node.path) :]
             node = node.next_.get_pointed_value()
 
         elif isinstance(node, BranchNode):

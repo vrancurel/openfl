@@ -22,7 +22,7 @@ class TestProofMemDB(unittest.TestCase):
 
     def test_serialize(self):
         self.proof_db.put(b'key', b'value')
-        serialized_db = self.proof_db.serialize()
+        self.proof_db.serialize()
         # Check the serialized_db structure
 
 if __name__ == "__main__":

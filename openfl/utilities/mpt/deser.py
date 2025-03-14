@@ -1,13 +1,14 @@
-from typing import Optional, Any
-from openfl.utilities.mpt.pointer import PointerFactory
-from openfl.utilities.mpt.nibbles import Nibble
-from openfl.utilities.mpt.nodes import Node
-from openfl.utilities.mpt.extension import ExtensionNode
-from openfl.utilities.mpt.branch import BranchNode
-from openfl.utilities.mpt.hash import HashNode
-from openfl.utilities.mpt.leaf import LeafNode
+from typing import Any
 
 from rlp import decode
+
+from openfl.utilities.mpt.branch import BranchNode
+from openfl.utilities.mpt.extension import ExtensionNode
+from openfl.utilities.mpt.hash import HashNode
+from openfl.utilities.mpt.leaf import LeafNode
+from openfl.utilities.mpt.nibbles import Nibble
+from openfl.utilities.mpt.nodes import Node
+from openfl.utilities.mpt.pointer import PointerFactory
 
 
 def deserialize(pf: PointerFactory, buf: bytes):
@@ -20,7 +21,7 @@ def deserialize(pf: PointerFactory, buf: bytes):
 
 
 def deserialize_internal(pf: PointerFactory, elem: Any) -> Node:
-    print('deserialize_internal', type(elem), elem)
+    print("deserialize_internal", type(elem), elem)
     if isinstance(elem, list):
         c = len(elem)
         if c == 2:
@@ -40,8 +41,8 @@ def deserialize_internal(pf: PointerFactory, elem: Any) -> Node:
 
 
 def deserialize_extension(pf: PointerFactory, elem: Any) -> Node:
-    print('deserialize_extension', type(elem[0]), elem[0], type(elem[1]), elem[1])
-    if not type(elem[0]) is bytes:
+    print("deserialize_extension", type(elem[0]), elem[0], type(elem[1]), elem[1])
+    if type(elem[0]) is not bytes:
         raise Exception("deserialize extension expecting bytes")
     b = elem[0]
     path, is_leaf_node = Nibble.from_prefixed(b)
@@ -51,12 +52,12 @@ def deserialize_extension(pf: PointerFactory, elem: Any) -> Node:
         node = deserialize_ref(pf, elem[1])
     except Exception as err:
         raise Exception(f"deserializing ref error: {str(err)}")
-    print('found extension', Nibble.list_to_str(path), node)
+    print("found extension", Nibble.list_to_str(path), node)
     return ExtensionNode(pf, path, node)
 
 
 def deserialize_branch(pf: PointerFactory, elem: Any) -> Node:
-    print('deserialize_branch', type(elem), elem)
+    print("deserialize_branch", type(elem), elem)
     branch_node = BranchNode(pf)
     for index, subelem in enumerate(elem):
         if index < 16:
@@ -72,7 +73,7 @@ def deserialize_branch(pf: PointerFactory, elem: Any) -> Node:
 
 
 def deserialize_ref(pf: PointerFactory, elem: Any) -> Node:
-    print('deserialize_ref', type(elem), elem)
+    print("deserialize_ref", type(elem), elem)
     if isinstance(elem, list):
         try:
             node = deserialize_internal(pf, elem)

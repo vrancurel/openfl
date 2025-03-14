@@ -1,5 +1,7 @@
-from openfl.utilities.mpt.proof import Proof
 from collections import OrderedDict
+
+from openfl.utilities.mpt.proof import Proof
+
 
 class ProofMemDB(Proof):
     def __init__(self):
@@ -17,7 +19,7 @@ class ProofMemDB(Proof):
 
     def get(self, key: bytes) -> bytes:
         if not (key := self.kv.get(key.hex())):
-            raise KeyError('not found')
+            raise KeyError("not found")
         return key
 
     def serialize(self) -> list[bytes]:

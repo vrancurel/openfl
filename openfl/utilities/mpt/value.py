@@ -1,5 +1,6 @@
 from openfl.utilities.mpt.crypto import keccak256
-from openfl.utilities.mpt.nodes import Node, serialize
+from openfl.utilities.mpt.nodes import serialize
+
 
 class ValueNode:
     def __init__(self, value: bytes):

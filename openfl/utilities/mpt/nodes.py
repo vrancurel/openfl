@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional, Any
+from typing import Optional
 
 from rlp import encode
 
@@ -25,6 +25,7 @@ def hash(node):
     if is_empty_node(node):
         return EMPTY_NODE_HASH
     return node.hash()
+
 
 def serialize(node):
     raw = EMPTY_NODE_RAW if is_empty_node(node) else node.raw()
