@@ -3,8 +3,11 @@ import collections
 from openfl.utilities.mpt.nibbles import Nibble
 from openfl.utilities.mpt.value import ValueNode
 from openfl.utilities.mpt.extension import ExtensionNode
+from openfl.utilities.mpt.branch import BranchNode
+from openfl.utilities.mpt.hash import HashNode
+from openfl.utilities.mpt.leaf import LeafNode
 from openfl.utilities.mpt.nodes import Node, serialize
-from openfl.utilities.mpt.serde import deserialize
+from openfl.utilities.mpt.deser import deserialize
 from openfl.utilities.mpt.pointer import PointerFactory
 from typing import List
 
@@ -69,15 +72,15 @@ def get_child(pf: PointerFactory, node: Node, path: List[Nibble]):
             if Nibble.prefix_matched_len(path, node.path) != len(node.path):
                 return None, None
 
-            node = node.next
             path = path[len(node.path):]
+            node = node.next_.get_pointed_value()
 
         elif isinstance(node, BranchNode):
             if len(path) == 0:
                 return Node, ValueNode(node.value)
 
-            node = node.branches[path[0]]
             path = path[1:]
+            node = node.branches[path[0]].get_pointed_value()
 
         elif isinstance(node, HashNode):
             return path, node

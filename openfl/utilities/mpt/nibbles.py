@@ -45,7 +45,7 @@ class Nibble:
     def from_prefixed(cls, bytes_seq):
         ns = cls.from_bytes(bytes_seq)
         is_leaf_node = ns[0]._value > 1
-        chop = 2 - ns[0]._value & 1
+        chop = 2 - (ns[0]._value & 1)
         return ns[chop:], is_leaf_node
 
     def __eq__(self, other):

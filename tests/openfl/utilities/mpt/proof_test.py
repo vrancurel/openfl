@@ -8,20 +8,22 @@ import unittest
 
 class TestProof(unittest.TestCase):
     def test_trie(self):
-        tr = Trie()
-        tr.put(bytes([1, 2, 3]), b"hello")
-        tr.put(bytes([1, 2, 3, 4, 5]), b"world")
+        trie = Trie()
+        trie.put(bytes([1, 2, 3]), b"hello")
+        trie.put(bytes([1, 2, 3, 4, 5]), b"world")
 
-        root = tr.rootp.get_pointed_value()
+        root = trie.rootp.get_pointed_value()
         self.assertIsInstance(root, ExtensionNode)
         branch = root.next_.get_pointed_value()
         self.assertIsInstance(branch, BranchNode)
 
+        trie.dump()
         proof = ProofMemDB()
-        ok = tr.prove(bytes([1, 2, 3]), proof)
+        ok = trie.prove(bytes([1, 2, 3]), proof)
+        proof.dump()
         self.assertTrue(ok)
         
-        root_hash = tr.hash()
+        root_hash = trie.hash()
         
         try:
             val = verify_proof(root_hash, bytes([1, 2, 3]), proof)

@@ -34,6 +34,11 @@ class TestNibble(unittest.TestCase):
         self.assertEqual(4, Nibble.prefix_matched_len(Nibble.from_list_int([0, 1, 2, 3]), Nibble.from_list_int([0, 1, 2, 3])))
         self.assertEqual(4, Nibble.prefix_matched_len(Nibble.from_list_int([0, 1, 2, 3]), Nibble.from_list_int([0, 1, 2, 3, 4])))
 
+    def test_from_prefixed(self):
+        path, is_leaf_node = Nibble.from_prefixed(bytes([0, 1, 2, 3]))
+        self.assertEqual(Nibble.from_list_int([0, 1, 0, 2, 0, 3]), path)
+        self.assertFalse(is_leaf_node)
+
 
 if __name__ == '__main__':
     unittest.main()
