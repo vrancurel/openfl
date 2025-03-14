@@ -21,7 +21,6 @@ def deserialize(pf: PointerFactory, buf: bytes):
 
 
 def deserialize_internal(pf: PointerFactory, elem: Any) -> Node:
-    print("deserialize_internal", type(elem), elem)
     if isinstance(elem, list):
         c = len(elem)
         if c == 2:
@@ -41,7 +40,6 @@ def deserialize_internal(pf: PointerFactory, elem: Any) -> Node:
 
 
 def deserialize_extension(pf: PointerFactory, elem: Any) -> Node:
-    print("deserialize_extension", type(elem[0]), elem[0], type(elem[1]), elem[1])
     if type(elem[0]) is not bytes:
         raise Exception("deserialize extension expecting bytes")
     b = elem[0]
@@ -52,12 +50,10 @@ def deserialize_extension(pf: PointerFactory, elem: Any) -> Node:
         node = deserialize_ref(pf, elem[1])
     except Exception as err:
         raise Exception(f"deserializing ref error: {str(err)}")
-    print("found extension", Nibble.list_to_str(path), node)
     return ExtensionNode(pf, path, node)
 
 
 def deserialize_branch(pf: PointerFactory, elem: Any) -> Node:
-    print("deserialize_branch", type(elem), elem)
     branch_node = BranchNode(pf)
     for index, subelem in enumerate(elem):
         if index < 16:
@@ -73,7 +69,6 @@ def deserialize_branch(pf: PointerFactory, elem: Any) -> Node:
 
 
 def deserialize_ref(pf: PointerFactory, elem: Any) -> Node:
-    print("deserialize_ref", type(elem), elem)
     if isinstance(elem, list):
         try:
             node = deserialize_internal(pf, elem)

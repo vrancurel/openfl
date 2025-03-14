@@ -182,7 +182,7 @@ class Trie:
 
                 b, remaining = nibbles[0], nibbles[1:]
                 nibbles = remaining
-                nodep = node.branches[b]
+                nodep = node.branches[b.to_int()]
                 continue
 
             if isinstance(node, ExtensionNode):
