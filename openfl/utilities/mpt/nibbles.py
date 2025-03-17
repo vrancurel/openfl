@@ -15,7 +15,7 @@ class Nibble:
 
     @staticmethod
     def list_to_str(nibble_list: List["Nibble"]) -> str:
-        return "".join(str(nibble) for nibble in nibble_list)
+        return " ".join(str(nibble) for nibble in nibble_list)
 
     @staticmethod
     def is_nibble(nibble_byte: int):

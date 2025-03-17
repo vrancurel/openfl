@@ -11,7 +11,7 @@ from openfl.utilities.mpt.nodes import Node
 from openfl.utilities.mpt.pointer import PointerFactory
 
 
-def deserialize(pf: PointerFactory, buf: bytes):
+def deserialize(pf: PointerFactory, buf: bytes) -> Node:
     if len(buf) == 0:
         raise ValueError("Unexpected EOF")
 

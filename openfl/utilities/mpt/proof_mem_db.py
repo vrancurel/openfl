@@ -26,6 +26,5 @@ class ProofMemDB(Proof):
         return list(self.kv.values())
 
     def dump(self):
-        print("Proof")
         for key, value in self.kv.items():
             print(f"- {key}:{value.hex()}")

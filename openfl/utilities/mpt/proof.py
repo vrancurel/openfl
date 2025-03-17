@@ -10,6 +10,7 @@ from openfl.utilities.mpt.nibbles import Nibble
 from openfl.utilities.mpt.nodes import Node
 from openfl.utilities.mpt.pointer import PointerFactory
 from openfl.utilities.mpt.value import ValueNode
+from openfl.utilities.mpt.dump import dump_node
 
 
 class Proof(abc.ABC):
@@ -81,14 +82,14 @@ def get_child(pf: PointerFactory, node: Node, path: List[Nibble]):
             if len(path) == 0:
                 return Node, ValueNode(node.value)
 
+            node = node.branches[path[0].to_int()].get_pointed_value()
             path = path[1:]
-            node = node.branches[path[0]].get_pointed_value()
 
         elif isinstance(node, HashNode):
             return path, node
-        elif node is None:
-            return path, None
         elif isinstance(node, LeafNode):
             return None, node
+        elif node is None:
+            return path, None
         else:
             raise Exception(f"{type(node)}: invalid node: {node}")
