@@ -1,12 +1,11 @@
 from typing import Optional, Tuple
 
 from openfl.utilities.mpt.branch import BranchNode
+from openfl.utilities.mpt.dump import dump_node
 from openfl.utilities.mpt.extension import ExtensionNode
-from openfl.utilities.mpt.hash import HashNode
 from openfl.utilities.mpt.leaf import LeafNode
 from openfl.utilities.mpt.nibbles import Nibble
-from openfl.utilities.mpt.nodes import EMPTY_NODE_HASH, Node, hash, is_empty_node, serialize
-from openfl.utilities.mpt.dump import dump_node
+from openfl.utilities.mpt.nodes import EMPTY_NODE_HASH, hash, is_empty_node, serialize
 from openfl.utilities.mpt.pointer import Pointer, PointerFactory
 from openfl.utilities.mpt.proof import Proof
 

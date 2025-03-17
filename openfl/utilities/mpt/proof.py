@@ -10,7 +10,6 @@ from openfl.utilities.mpt.nibbles import Nibble
 from openfl.utilities.mpt.nodes import Node
 from openfl.utilities.mpt.pointer import PointerFactory
 from openfl.utilities.mpt.value import ValueNode
-from openfl.utilities.mpt.dump import dump_node
 
 
 class Proof(abc.ABC):

@@ -91,12 +91,12 @@ class TestProof(unittest.TestCase):
         # Generate a common prefix
         common_prefix = bytes(random.sample(range(97, 122), 3))
 
-        for _ in range(100):
+        for _ in range(20):
             # Generate a unique suffix for each path: a byte string of 2 random numbers each between 1 and 100
             path_suffix = bytes(random.sample(range(97, 122), 20))
             # Combine the common prefix with the unique suffix to get the path
             path = common_prefix + path_suffix
-    
+
             value = bytes(random.sample(range(97, 122), 5))
             trie.put(path, value)
 

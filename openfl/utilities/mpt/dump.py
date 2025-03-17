@@ -1,5 +1,3 @@
-from typing import Optional, Tuple
-
 from openfl.utilities.mpt.branch import BranchNode
 from openfl.utilities.mpt.extension import ExtensionNode
 from openfl.utilities.mpt.hash import HashNode
