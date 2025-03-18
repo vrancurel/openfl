@@ -7,8 +7,8 @@ class TestLeaf(unittest.TestCase):
     def test_leaf_hash(self):
         self.assertEqual("01020304", bytes([1, 2, 3, 4]).hex())
         self.assertEqual("76657262", bytes("verb", 'utf-8').hex())
-        self.assertEqual("01020304", Nibble.list_to_str(Nibble.from_bytes(bytes([1, 2, 3, 4]))))
-        self.assertEqual("2001020304", Nibble.list_to_str(Nibble.to_prefixed(Nibble.from_bytes(bytes([1, 2, 3, 4])), True)))
+        self.assertEqual("0 1 0 2 0 3 0 4", Nibble.list_to_str(Nibble.from_bytes(bytes([1, 2, 3, 4]))))
+        self.assertEqual("2 0 0 1 0 2 0 3 0 4", Nibble.list_to_str(Nibble.to_prefixed(Nibble.from_bytes(bytes([1, 2, 3, 4])), True)))
         self.assertEqual(bytes([32, 1, 2, 3, 4]), Nibble.to_bytes(Nibble.to_prefixed(Nibble.from_bytes(bytes([1, 2, 3, 4])), True)))
         self.assertEqual("636f696e", bytes("coin", 'utf-8').hex())
 
