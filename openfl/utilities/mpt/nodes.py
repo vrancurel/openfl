@@ -8,6 +8,9 @@ EMPTY_NODE_HASH = bytes.fromhex("56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc
 
 
 class Node(ABC):
+    def __init__(self):
+        self._callback = None
+
     @abstractmethod
     def hash(self):
         pass
@@ -15,6 +18,9 @@ class Node(ABC):
     @abstractmethod
     def raw(self):
         pass
+
+    def set_callback(self, callback):
+        self._callback = callback
 
 
 def is_empty_node(node: Optional[Node]) -> bool:

@@ -1,3 +1,4 @@
+from functools import lru_cache
 from typing import List
 
 from openfl.utilities.mpt.crypto import keccak256
@@ -12,9 +13,11 @@ class HashNode(Node):
     def new_hash_node(hash_value: bytes) -> "HashNode":
         return HashNode(hash_value=hash_value)
 
+    @lru_cache(maxsize=None)  # noqa: B019
     def hash(self) -> bytes:
         return keccak256(self.serialize())
 
+    @lru_cache(maxsize=None)  # noqa: B019
     def raw(self) -> List[bytes]:
         raw = [self.hash_value]
         return raw

@@ -1,3 +1,4 @@
+from functools import lru_cache
 from typing import List
 
 from openfl.utilities.mpt.crypto import keccak256
@@ -10,9 +11,11 @@ class LeafNode(Node):
         self.path: List[Nibble] = path
         self.value: bytes = value
 
+    @lru_cache(maxsize=None)  # noqa: B019
     def hash(self) -> bytes:
         return keccak256(self.serialize())
 
+    @lru_cache(maxsize=None)  # noqa: B019
     def raw(self) -> List[bytes]:
         path = Nibble.to_bytes(Nibble.to_prefixed(self.path, True))
         return [bytes(path), self.value]

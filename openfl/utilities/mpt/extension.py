@@ -1,3 +1,4 @@
+from functools import lru_cache
 from typing import List
 
 from rlp import encode
@@ -12,11 +13,22 @@ class ExtensionNode(Node):
     def __init__(self, pf: PointerFactory, nibbles: List[Nibble], next_: Node):
         self.pf: PointerFactory = pf
         self.path: List[Nibble] = nibbles
+
+        self.set_callback(lambda: self.clear_cache())
+        next_.set_callback(self.notify_update)
+
         self.next_: Pointer = self.pf.create_pointer(next_)
 
+    def notify_update(self):
+        """Call this method whenever there's an update in this node."""
+        if self._callback is not None:
+            self._callback()
+
+    @lru_cache(maxsize=None)  # noqa: B019
     def hash(self) -> bytes:
         return keccak256(self.serialize())
 
+    @lru_cache(maxsize=None)  # noqa: B019
     def raw(self):
         hashes = [None] * 2
         hashes[0] = Nibble.to_bytes(Nibble.to_prefixed(self.path, False))
@@ -29,3 +41,7 @@ class ExtensionNode(Node):
 
     def serialize(self) -> bytes:
         return encode(self.raw())
+
+    def clear_cache(self):
+        self.hash.cache_clear()
+        self.raw.cache_clear()
